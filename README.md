@@ -205,11 +205,9 @@ El diseño utiliza estándares SQL y puede ser adaptado a diferentes motores de 
 
 ```
 /
-├── README.md                          # Este archivo
-├── docs/
-│   └── modelo_entidad_relacion.md    # Documentación técnica completa
-└── diagrams/
-    └── diagrama_er.png               # Diagrama entidad-relación (si existe)
+├── README.md                           # Este archivo
+├── modelo_entidad_relacion.md          # Documentación técnica completa
+└── diagrama_er.png                     # Diagrama entidad-relación (si existe)
 ```
 
 ---
