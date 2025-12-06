@@ -1,9 +1,34 @@
-# Documentación del Diagrama Entidad-Relación
-## Sistema de Gestión de Compras, Ventas e Inventario
+# Modelo Entidad-Relación — Sistema de Ventas
+
+Este documento describe el modelo entidad-relación del sistema de ventas, enfocándose en la estructura de las tablas, sus relaciones y la organización lógica del modelo de datos.
+
+## Índice
+
+- [Visión General](#visión-general)
+- [Entidades Principales](#entidades-principales)
+- [Organización por Módulos](#organización-por-módulos)
+- [Relaciones Entre Entidades](#relaciones-entre-entidades)
+- [Restricciones de Integridad Adicionales](#restricciones-de-integridad-adicionales)
+- [Índices Recomendados](#índices-recomendados)
+- [Notas de Implementación](#Notas-de-implementación)
 
 ---
 
-## 📋 Descripción de Tablas
+## Visión General
+
+El modelo de datos está diseñado para gestionar un sistema completo de ventas y compras, con soporte para múltiples tiendas, control de inventario, facturación y seguimiento de transacciones. El diseño sigue principios de normalización y permite escalabilidad para operaciones comerciales de mediana y gran escala.
+
+### Características Principales
+
+- **Multi-tienda**: Soporte para múltiples ubicaciones de venta
+- **Control de inventario**: Seguimiento en tiempo real por tienda y producto
+- **Facturación integrada**: Generación de facturas vinculadas a ventas
+- **Gestión de compras**: Control de adquisiciones y aplicación automática al inventario
+- **Trazabilidad completa**: Auditoría de cambios con timestamps
+
+---
+
+## 📋 Entidades Principales
 
 ### PERSONA
 Tabla central que almacena información de todas las personas del sistema (clientes, empleados, proveedores).
@@ -317,7 +342,7 @@ Catálogo de categorías de productos.
 
 ---
 
-## 🔄 Secuencia de Módulos
+## 🔄 Organización por Módulos
 
 ### Módulo de COMPRA
 
@@ -449,7 +474,7 @@ Catálogo de categorías de productos.
 
 ---
 
-## 🔗 Relaciones Entre Entidades
+## 🔗  Relaciones Entre Entidades
 
 ### Relaciones de Herencia (Especialización)
 
