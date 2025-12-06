@@ -152,7 +152,7 @@ Para información detallada sobre:
 - Especificaciones técnicas de implementación
 - Ejemplos de consultas SQL
 
-Consulta: **[Documentación Técnica Completa](./docs/modelo_entidad_relacion.md)**
+Consulta: **[Documentación Técnica Completa](modelo_entidad_relacion.md)**
 
 ---
 
@@ -189,5 +189,5 @@ El diseño soporta:
 
 ---
 
-**Última actualización**: Diciembre 2024  
-**Versión del modelo**: 1.0
+**Última actualización**: Diciembre 2025  
+**Versión del modelo**: 2.0
