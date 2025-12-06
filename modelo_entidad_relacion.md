@@ -43,7 +43,7 @@ Este documento describe el modelo entidad-relación del sistema de ventas, enfoc
   - [Escalabilidad](#escalabilidad)
   - [Flexibilidad](#flexibilidad)
   - [Integridad de Datos](#integridad-de-datos)
-  - [Performance](#performance)
+  - [Rendimiento](#performance)
 - [Diagramas de Apoyo](#diagramas-de-apoyo)
 
 ---
@@ -733,7 +733,7 @@ Para optimizar el rendimiento del sistema, se recomienda crear índices en los s
 - **Estados controlados**: Flujos de compra con estados bien definidos
 - **Trazabilidad**: Timestamps automáticos en todas las tablas
 
-### Performance
+### Rendimiento
 - **Claves surrogate**: IDs seriales para joins eficientes
 - **Desnormalización controlada**: Totales precalculados para consultas frecuentes
 - **Índices estratégicos**: Optimización para consultas comunes por fecha, cliente, producto
