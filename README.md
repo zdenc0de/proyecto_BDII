@@ -1,193 +1,237 @@
-# Sistema de Ventas - Modelo de Base de Datos
+# Sistema de Ventas - Base de Datos
 
-Sistema completo de gestión de ventas, compras e inventario diseñado para operaciones multi-tienda con control de stock en tiempo real y facturación integrada.
-
----
-
-## 📋 Características Principales
-
-- ✅ **Multi-tienda**: Gestión de múltiples sucursales
-- 📦 **Control de inventario**: Seguimiento en tiempo real por ubicación
-- 💰 **Ventas y facturación**: Proceso completo de venta con generación de facturas
-- 🛒 **Gestión de compras**: Control de adquisiciones y recepción de mercancía
-- 👥 **Gestión de personal**: Registro de empleados y asignación de puestos
-- 📊 **Trazabilidad completa**: Auditoría con timestamps automáticos
+> Modelo de base de datos completo para un sistema de gestión empresarial que integra ventas, compras, inventario y recursos humanos.
 
 ---
 
-## 🗂️ Estructura del Sistema
+## 📖 Acerca del Proyecto
 
-### Módulos Principales
+Este proyecto documenta el diseño completo de una base de datos relacional para un sistema de ventas multi-tienda. El modelo está diseñado para empresas que requieren control centralizado de operaciones comerciales, gestión de inventario en múltiples ubicaciones y trazabilidad completa de transacciones.
+
+El sistema está pensado para negocios de retail, comercio mayorista o cualquier organización que necesite:
+- Gestionar ventas en múltiples puntos de venta
+- Controlar inventario distribuido
+- Administrar compras a proveedores
+- Facturar operaciones comerciales
+- Gestionar personal y asignaciones
+
+---
+
+## 🎯 ¿Para Quién es Este Proyecto?
+
+### Desarrolladores
+- Implementación de sistemas ERP o POS
+- Referencia para diseño de bases de datos comerciales
+- Ejemplos de modelado de relaciones complejas
+
+### Estudiantes
+- Aprendizaje de diseño de bases de datos
+- Casos prácticos de normalización
+- Estudio de integridad referencial
+
+### Arquitectos de Software
+- Diseño de sistemas empresariales
+- Patrones de modelado de datos
+- Casos de uso de sistemas transaccionales
+
+---
+
+## 📂 Estructura de la Documentación
+
+### `modelo_entidad_relacion.md`
+**Documentación técnica completa del modelo de datos**
+
+Este documento contiene:
+
+#### 1. **Visión General**
+- Introducción al sistema y sus capacidades
+- Características principales del modelo
+- Alcance y objetivos del diseño
+
+#### 2. **Entidades Principales** (16 tablas)
+Descripción detallada de cada tabla del sistema:
+- Estructura de campos
+- Restricciones (PK, FK, NOT NULL, UNIQUE, CHECK)
+- Relaciones con otras entidades
+- Índices recomendados por tabla
+
+Incluye entidades para:
+- Gestión de personas (clientes, empleados, proveedores)
+- Operaciones de venta y facturación
+- Operaciones de compra
+- Control de inventario y stock
+- Catálogo de productos
+- Administración de sucursales
+
+#### 3. **Organización por Módulos**
+Flujos de proceso detallados para:
+- **Módulo de Compra**: Desde registro hasta recepción de mercancía
+- **Módulo de Inventario**: Entradas, salidas, transferencias y alertas
+- **Módulo de Venta**: Validación, registro y facturación
+
+#### 4. **Relaciones Entre Entidades**
+Explicación exhaustiva de:
+- Relaciones de herencia (especialización)
+- Relaciones por módulo funcional
+- Diagramas de dependencias
+- Cardinalidades y restricciones
+
+#### 5. **Restricciones de Integridad**
+- Reglas de negocio implementadas a nivel de BD
+- Políticas de eliminación (CASCADE, RESTRICT)
+- Validaciones de consistencia
+
+#### 6. **Índices Recomendados**
+- Justificación de cada índice propuesto
+- Impacto en performance
+- Campos estratégicos para optimización
+
+#### 7. **Notas de Implementación**
+- Consideraciones sobre transacciones
+- Uso de triggers
+- Recomendaciones de seguridad
+
+#### 8. **Consideraciones de Diseño**
+Análisis de:
+- Escalabilidad del modelo
+- Flexibilidad para extensiones
+- Integridad de datos
+- Optimización de performance
+
+---
+
+## 🔍 Conceptos Clave del Modelo
+
+### Diseño Multi-Tienda
+El sistema permite operar múltiples sucursales con inventario independiente pero centralizado en una sola base de datos.
+
+### Trazabilidad Completa
+Cada operación queda registrada con timestamps automáticos (`created_at`, `updated_at`) permitiendo auditorías completas.
+
+### Integridad Referencial Estricta
+El modelo implementa restricciones CASCADE y RESTRICT estratégicamente para mantener la consistencia de datos.
+
+### Normalización Optimizada
+Diseño en 3FN (Tercera Forma Normal) con desnormalización controlada donde el rendimiento lo requiere.
+
+### Gestión de Estados
+Las compras manejan estados (PENDIENTE, RECIBIDA, CANCELADA) permitiendo workflows controlados.
+
+---
+
+## 🗺️ Diagrama de Alto Nivel
 
 ```
-┌─────────────────────────────────────────────────────┐
-│                   PERSONA                           │
-│           (Clientes, Empleados, Proveedores)        │
-└─────────────────────────────────────────────────────┘
-                         │
-        ┌────────────────┼────────────────┐
-        │                │                │
-    COMPRAS          VENTAS          INVENTARIO
-        │                │                │
-   Proveedores      Clientes         Sucursales
-   Productos        Facturación      Stock
-   Recepción        Empleados        Productos
+┌─────────────────────────────────────────────────┐
+│                    PERSONA                      │
+│         (Entidad central del sistema)           │
+└─────────────────────────────────────────────────┘
+                      │
+        ┌─────────────┼─────────────┐
+        ▼             ▼             ▼
+    CLIENTE       EMPLEADO      PROVEEDOR
+        │             │             │
+        │             │             │
+        ▼             ▼             ▼
+      VENTA ──────> COMPRA ───> INVENTARIO
+        │             │             │
+        ▼             │             ▼
+    FACTURA          │          STOCK
+        │             │             │
+        └─────────────┴─────────────┘
+                      │
+                      ▼
+                  PRODUCTO
+                      │
+                      ▼
+                  CATEGORIA
 ```
 
 ---
 
-## 📊 Entidades del Sistema
+## 💡 Casos de Uso Cubiertos
 
-### Gestión de Personas
-- **PERSONA**: Tabla central para todos los actores
-- **CLIENTE**: Compradores del sistema
-- **EMPLEADO**: Personal de la empresa
-- **PROVEEDOR**: Suministradores de productos
-- **PUESTO**: Catálogo de puestos laborales
+El modelo soporta los siguientes procesos de negocio:
 
-### Módulo de Ventas
-- **VENTA**: Registro de transacciones de venta
-- **VENTA/PRODUCTO**: Detalle de productos vendidos
-- **FACTURA**: Documentos fiscales de ventas
-
-### Módulo de Compras
-- **COMPRA**: Órdenes de compra a proveedores
-- **COMPRA/PRODUCTO**: Detalle de productos comprados
-
-### Módulo de Inventario
-- **INVENTARIO**: Control de productos por sucursal
-- **STOCK**: Cantidades disponibles en tiempo real
-- **PRODUCTO**: Catálogo de productos
-- **CATEGORIA**: Clasificación de productos
-- **SUCURSAL**: Ubicaciones de venta
+✅ Registro y gestión de clientes, empleados y proveedores  
+✅ Creación de órdenes de compra con seguimiento de estados  
+✅ Recepción de mercancía y actualización automática de inventario  
+✅ Registro de ventas con validación de stock disponible  
+✅ Emisión de facturas vinculadas a ventas  
+✅ Control de inventario por sucursal  
+✅ Transferencias de productos entre sucursales  
+✅ Consultas de disponibilidad de productos  
+✅ Historial completo de transacciones  
+✅ Asignación de puestos a empleados con historial laboral  
 
 ---
 
-## 🔄 Flujo de Procesos
+## 🛠️ Tecnologías y Herramientas
 
-### Proceso de Compra
-```
-1. Registro de compra → Estado: PENDIENTE
-2. Recepción de mercancía → Actualiza INVENTARIO
-3. Actualización de STOCK → Estado: RECIBIDA
-```
+Este modelo de datos está diseñado para ser implementado en:
+- MySQL / MariaDB
+- PostgreSQL
+- SQL Server
+- Oracle Database
 
-### Proceso de Venta
-```
-1. Verificación de STOCK disponible
-2. Registro de VENTA y productos
-3. Descuento de STOCK automático
-4. Generación de FACTURA (opcional)
-```
+El diseño utiliza estándares SQL y puede ser adaptado a diferentes motores de base de datos con ajustes mínimos.
 
-### Control de Inventario
+---
+
+## 📚 Cómo Usar Esta Documentación
+
+### Para Implementar el Sistema
+1. Lee la **Visión General** para entender el alcance
+2. Revisa las **Entidades Principales** para conocer la estructura
+3. Estudia la **Organización por Módulos** para entender los flujos
+4. Implementa las tablas siguiendo las especificaciones
+5. Aplica los **Índices Recomendados** para optimizar
+
+### Para Estudiar Diseño de BD
+1. Analiza las **Relaciones Entre Entidades** para ver patrones
+2. Estudia las **Restricciones de Integridad** y su justificación
+3. Revisa las **Consideraciones de Diseño** para entender decisiones
+4. Compara con tus propios diseños
+
+### Para Adaptar a Tu Proyecto
+1. Identifica los módulos que necesitas
+2. Adapta las entidades a tu contexto de negocio
+3. Modifica restricciones según tus reglas
+4. Extiende con nuevas tablas si es necesario
+
+---
+
+## 📋 Contenido de los Archivos
+
 ```
-├─ ENTRADA: Desde compras recibidas
-├─ SALIDA: Desde ventas realizadas
-├─ TRANSFERENCIAS: Entre sucursales
-└─ ALERTAS: Stock mínimo
+/
+├── README.md                          # Este archivo
+├── docs/
+│   └── modelo_entidad_relacion.md    # Documentación técnica completa
+└── diagrams/
+    └── diagrama_er.png               # Diagrama entidad-relación (si existe)
 ```
 
 ---
 
-## 🔗 Relaciones Clave
+## 🚀 Comenzar
 
-### Herencia (Especialización)
-```
-PERSONA
-   ├── CLIENTE
-   ├── EMPLEADO
-   └── PROVEEDOR
-```
-
-### Relaciones Principales
-- `VENTA` conecta: CLIENTE + EMPLEADO + SUCURSAL + PRODUCTOS
-- `COMPRA` conecta: PROVEEDOR + SUCURSAL + PRODUCTOS
-- `INVENTARIO` conecta: SUCURSAL + PRODUCTO + STOCK
-- `STOCK` es actualizado por: COMPRAS (entrada) + VENTAS (salida)
+Para explorar el modelo completo, dirígete a la **[Documentación Técnica](modelo_entidad_relacion.md)** donde encontrarás:
+- Especificaciones detalladas de cada tabla
+- Diagramas de flujo de procesos
+- Ejemplos de relaciones
+- Guías de implementación
 
 ---
 
-## 🛡️ Restricciones de Integridad
+## 📝 Notas Importantes
 
-### Validaciones de Negocio
-✅ Stock nunca negativo  
-✅ No se puede vender más de lo disponible  
-✅ Totales consistentes: `total = subtotal + iva`  
-✅ Cantidad recibida ≤ cantidad solicitada  
-✅ Una venta = máximo una factura  
-
-### Reglas de Eliminación
-- **CASCADE**: Al eliminar PERSONA se eliminan sus especializaciones
-- **CASCADE**: Al eliminar VENTA/COMPRA se eliminan sus detalles
-- **RESTRICT**: No se puede eliminar PRODUCTO con movimientos activos
-- **RESTRICT**: No se puede eliminar CLIENTE/PROVEEDOR con transacciones
+- Este es un **modelo lógico**, no incluye scripts SQL de implementación
+- Las restricciones y tipos de datos son referencias, adapta según tu motor de BD
+- Los flujos de procesos son sugerencias, modifícalos según tus necesidades
+- El modelo está diseñado para ser **extensible** y **escalable**
 
 ---
 
-## ⚡ Optimización y Performance
-
-### Índices Estratégicos
-Los siguientes campos están indexados para consultas eficientes:
-
-**PERSONA**: RFC, Email  
-**VENTA**: Fecha, Cliente, Sucursal  
-**COMPRA**: Fecha, Proveedor, Estado  
-**INVENTARIO**: SKU, Sucursal  
-**PRODUCTO**: Nombre, Categoría  
-
-### Mejores Prácticas
-- ✅ Transacciones ACID para VENTAS y COMPRAS
-- ✅ Triggers automáticos para actualización de STOCK
-- ✅ Auditoría con `created_at` y `updated_at`
-- ✅ Validaciones a nivel de BD y aplicación
-
----
-
-## 📁 Documentación Completa
-
-Para información detallada sobre:
-- Estructura completa de tablas y restricciones
-- Diagramas de flujo por módulo
-- Especificaciones técnicas de implementación
-- Ejemplos de consultas SQL
-
-Consulta: **[Documentación Técnica Completa](modelo_entidad_relacion.md)**
-
----
-
-## 🚀 Casos de Uso
-
-### Venta en Punto de Venta
-1. Empleado registra venta para cliente
-2. Sistema valida stock disponible en sucursal
-3. Descuenta inventario automáticamente
-4. Genera factura si es requerida
-
-### Recepción de Mercancía
-1. Se registra orden de compra (PENDIENTE)
-2. Al recibir mercancía, cambia a RECIBIDA
-3. Inventario se actualiza automáticamente
-4. Stock queda disponible para ventas
-
-### Consulta de Inventario
-1. Ver stock actual por sucursal
-2. Identificar productos con stock bajo
-3. Generar alertas de reabastecimiento
-4. Planificar transferencias entre sucursales
-
----
-
-## 🏗️ Escalabilidad
-
-El diseño soporta:
-- ✅ Múltiples sucursales (multi-tienda)
-- ✅ Miles de productos en catálogo
-- ✅ Alto volumen de transacciones diarias
-- ✅ Extensión a nuevos módulos (devoluciones, promociones, etc.)
-- ✅ Integración con sistemas externos
-
----
-
-**Última actualización**: Diciembre 2025  
-**Versión del modelo**: 2.0
+**Documentación**: v2.0  
+**Última actualización**: Diciembre 2025
