@@ -1,380 +1,235 @@
-# Modelo Entidad-Relación — Sistema de Ventas
+# Sistema de Ventas - Base de Datos
 
-Este documento describe el modelo entidad-relación del sistema de ventas, enfocándose en la estructura de las tablas, sus relaciones y la organización lógica del modelo de datos.
-
-## Índice
-
-- [Visión General](#visión-general)
-- [Entidades Principales](#entidades-principales)
-- [Organización por Módulos](#organización-por-módulos)
-- [Relaciones Entre Entidades](#relaciones-entre-entidades)
-- [Claves y Restricciones](#claves-y-restricciones)
-- [Integridad Referencial](#integridad-referencial)
-- [Consideraciones de Diseño](#consideraciones-de-diseño)
+> Modelo de base de datos completo para un sistema de gestión empresarial que integra ventas, compras, inventario y recursos humanos.
 
 ---
 
-## Visión General
+## 📖 Acerca del Proyecto
 
-El modelo de datos está diseñado para gestionar un sistema completo de ventas y compras, con soporte para múltiples tiendas, control de inventario, facturación y seguimiento de transacciones. El diseño sigue principios de normalización y permite escalabilidad para operaciones comerciales de mediana y gran escala.
+Este proyecto documenta el diseño completo de una base de datos relacional para un sistema de ventas multi-tienda. El modelo está diseñado para empresas que requieren control centralizado de operaciones comerciales, gestión de inventario en múltiples ubicaciones y trazabilidad completa de transacciones.
 
-### Características Principales
-
-- **Multi-tienda**: Soporte para múltiples ubicaciones de venta
-- **Control de inventario**: Seguimiento en tiempo real por tienda y producto
-- **Facturación integrada**: Generación de facturas vinculadas a ventas
-- **Gestión de compras**: Control de adquisiciones y aplicación automática al inventario
-- **Trazabilidad completa**: Auditoría de cambios con timestamps
-
----
-
-## Entidades Principales
-
-### **Tiendas**
-- **Propósito**: Representa las ubicaciones físicas de venta
-- **Campos clave**: `id_tienda` (PK), `nombre`, `direccion`, `ciudad`
-- **Rol**: Entidad central que agrupa empleados, inventario y transacciones
-
-### **Empleados y Puestos**
-- **Empleados**: Personal que opera en las tiendas
-- **Puesto_Empleados**: Catálogo de roles (Vendedor, Cajero, Gerente, etc.)
-- **Relación**: Cada empleado tiene un puesto asignado y trabaja en una tienda específica
-
-### **Productos y Categorías**
-- **Productos**: Catálogo maestro de artículos comercializables
-- **Categoria_Productos**: Clasificación organizacional de productos
-- **Características**: SKU único, precios de venta y costo, descripción detallada
-
-### **Proveedores**
-- **Propósito**: Entidades que suministran productos
-- **Datos**: Información de contacto, razón social, detalles comerciales
-- **Relación**: Vinculados a productos para trazabilidad de origen
-
-### **Clientes**
-- **Propósito**: Registro de compradores para ventas y facturación
-- **Campos**: Datos personales, RFC (opcional), información de contacto
-- **Flexibilidad**: Soporte para ventas anónimas (cliente NULL)
+El sistema está pensado para negocios de retail, comercio mayorista o cualquier organización que necesite:
+- Gestionar ventas en múltiples puntos de venta
+- Controlar inventario distribuido
+- Administrar compras a proveedores
+- Facturar operaciones comerciales
+- Gestionar personal y asignaciones
 
 ---
 
-## Diseño Detallado de Tablas
+## 🎯 ¿Para Quién es Este Proyecto?
 
-### **tiendas**
-| Campo | Tipo | Descripción |
-|---|---|---|
-| `id_tienda` | SERIAL (PK) | Identificador único de la tienda |
-| `nombre` | VARCHAR(200) | Nombre comercial de la tienda |
-| `direccion` | VARCHAR(300) | Dirección física completa |
-| `telefono` | VARCHAR(50) | Número de contacto |
-| `ciudad` | VARCHAR(100) | Ciudad donde se ubica |
-| `created_at` | TIMESTAMP | Fecha de registro |
-| `updated_at` | TIMESTAMP | Última modificación |
+### Desarrolladores
+- Implementación de sistemas ERP o POS
+- Referencia para diseño de bases de datos comerciales
+- Ejemplos de modelado de relaciones complejas
 
-### **puesto_empleados**
-| Campo | Tipo | Descripción |
-|---|---|---|
-| `id_puesto` | SERIAL (PK) | Identificador del puesto |
-| `nombre_puesto` | VARCHAR(150) | Denominación del cargo (Vendedor, Cajero, Gerente) |
-| `created_at` | TIMESTAMP | Fecha de registro |
-| `updated_at` | TIMESTAMP | Última modificación |
+### Estudiantes
+- Aprendizaje de diseño de bases de datos
+- Casos prácticos de normalización
+- Estudio de integridad referencial
 
-### **empleados**
-| Campo | Tipo | Descripción |
-|---|---|---|
-| `id_empleado` | SERIAL (PK) | Identificador único del empleado |
-| `nombre` | VARCHAR(200) | Nombre propio |
-| `apellido_paterno` | VARCHAR(150) | Apellido paterno |
-| `apellido_materno` | VARCHAR(150) | Apellido materno |
-| `rfc` | VARCHAR(20) | Registro Federal de Contribuyentes |
-| `fecha_contratacion` | DATE | Fecha de ingreso a la empresa |
-| `id_tienda` | INTEGER (FK) | Tienda asignada → `tiendas(id_tienda)` |
-| `id_puesto` | INTEGER (FK) | Puesto ocupado → `puesto_empleados(id_puesto)` |
-| `created_at` | TIMESTAMP | Fecha de registro |
-| `updated_at` | TIMESTAMP | Última modificación |
-
-### **proveedores**
-| Campo | Tipo | Descripción |
-|---|---|---|
-| `id_proveedor` | SERIAL (PK) | Identificador único del proveedor |
-| `nombre_empresa` | VARCHAR(200) | Razón social o nombre comercial |
-| `contacto_nombre` | VARCHAR(200) | Persona de contacto |
-| `contacto_email` | VARCHAR(150) | Correo electrónico |
-| `contacto_telefono` | VARCHAR(50) | Teléfono de contacto |
-| `created_at` | TIMESTAMP | Fecha de registro |
-| `updated_at` | TIMESTAMP | Última modificación |
-
-### **categoria_productos**
-| Campo | Tipo | Descripción |
-|---|---|---|
-| `id_categoria` | SERIAL (PK) | Identificador único de la categoría |
-| `nombre_categoria` | VARCHAR(150) | Nombre de la categoría |
-| `descripcion` | TEXT | Descripción detallada (opcional) |
-| `created_at` | TIMESTAMP | Fecha de registro |
-| `updated_at` | TIMESTAMP | Última modificación |
-
-### **productos**
-| Campo | Tipo | Descripción |
-|---|---|---|
-| `id_producto` | SERIAL (PK) | Identificador único del producto |
-| `sku` | VARCHAR(80) UNIQUE | Código de producto único |
-| `nombre_producto` | VARCHAR(250) | Denominación comercial |
-| `descripcion` | TEXT | Descripción detallada (opcional) |
-| `precio_venta` | NUMERIC(12,2) | Precio sugerido de venta |
-| `costo_compra` | NUMERIC(12,2) | Costo de adquisición |
-| `id_categoria` | INTEGER (FK) | Categoría → `categoria_productos(id_categoria)` |
-| `id_proveedor` | INTEGER (FK) | Proveedor → `proveedores(id_proveedor)` |
-| `created_at` | TIMESTAMP | Fecha de registro |
-| `updated_at` | TIMESTAMP | Última modificación |
-
-### **inventario**
-| Campo | Tipo | Descripción |
-|---|---|---|
-| `id_tienda` | INTEGER (PK, FK) | Tienda → `tiendas(id_tienda)` |
-| `id_producto` | INTEGER (PK, FK) | Producto → `productos(id_producto)` |
-| `cantidad` | INTEGER | Cantidad disponible en la tienda |
-| `fecha_ultima_actualizacion` | TIMESTAMP | Última modificación de stock |
-| `updated_at` | TIMESTAMP | Última modificación del registro |
-
-**Nota**: Clave primaria compuesta `(id_tienda, id_producto)`
-
-### **clientes**
-| Campo | Tipo | Descripción |
-|---|---|---|
-| `id_cliente` | SERIAL (PK) | Identificador único del cliente |
-| `nombre` | VARCHAR(250) | Nombre completo |
-| `rfc` | VARCHAR(13) UNIQUE | RFC (único cuando no es NULL) |
-| `email` | VARCHAR(150) | Correo electrónico |
-| `telefono` | VARCHAR(50) | Número de contacto |
-| `created_at` | TIMESTAMP | Fecha de registro |
-| `updated_at` | TIMESTAMP | Última modificación |
-
-### **venta**
-| Campo | Tipo | Descripción |
-|---|---|---|
-| `id_venta` | SERIAL (PK) | Identificador único de la venta |
-| `fecha_hora` | TIMESTAMP | Momento de la transacción |
-| `monto_total` | NUMERIC(14,2) | Total de la venta (calculado automáticamente) |
-| `id_cliente` | INTEGER (FK) | Cliente → `clientes(id_cliente)` (opcional) |
-| `id_empleado` | INTEGER (FK) | Empleado → `empleados(id_empleado)` (opcional) |
-| `id_tienda` | INTEGER (FK) | Tienda → `tiendas(id_tienda)` (opcional) |
-| `created_at` | TIMESTAMP | Fecha de registro |
-| `updated_at` | TIMESTAMP | Última modificación |
-
-### **detalles_venta**
-| Campo | Tipo | Descripción |
-|---|---|---|
-| `id_detalle_venta` | SERIAL (PK) | Identificador único del detalle |
-| `id_venta` | INTEGER (FK) | Venta → `venta(id_venta)` |
-| `id_producto` | INTEGER (FK) | Producto → `productos(id_producto)` |
-| `cantidad` | INTEGER | Cantidad vendida (> 0) |
-| `precio_unitario` | NUMERIC(12,2) | Precio al momento de la venta (≥ 0) |
-| `subtotal` | NUMERIC(14,2) | Cantidad × Precio unitario (calculado automáticamente) |
-| `created_at` | TIMESTAMP | Fecha de registro |
-| `updated_at` | TIMESTAMP | Última modificación |
-
-### **facturacion**
-| Campo | Tipo | Descripción |
-|---|---|---|
-| `id_factura` | SERIAL (PK) | Identificador único de la factura |
-| `id_venta` | INTEGER (FK) | Venta → `venta(id_venta)` |
-| `serie` | VARCHAR(20) | Serie del comprobante fiscal |
-| `folio` | VARCHAR(50) | Folio o número de factura |
-| `fecha_emision` | TIMESTAMP | Fecha de emisión del comprobante |
-| `total` | NUMERIC(14,2) | Monto total facturado |
-| `metodo_pago` | VARCHAR(50) | Forma de pago utilizada |
-| `estado` | VARCHAR(30) | Estado del comprobante (emitida, cancelada, etc.) |
-| `xml_path` | TEXT | Ruta al archivo XML (opcional) |
-| `pdf_path` | TEXT | Ruta al archivo PDF (opcional) |
-| `created_at` | TIMESTAMP | Fecha de registro |
-| `updated_at` | TIMESTAMP | Última modificación |
-
-### **compra**
-| Campo | Tipo | Descripción |
-|---|---|---|
-| `id_compra` | SERIAL (PK) | Identificador único de la compra |
-| `fecha_compra` | TIMESTAMP | Fecha de la orden de compra |
-| `id_proveedor` | INTEGER (FK) | Proveedor → `proveedores(id_proveedor)` (opcional) |
-| `id_tienda` | INTEGER (FK) | Tienda receptora → `tiendas(id_tienda)` (opcional) |
-| `total_compra` | NUMERIC(14,2) | Total de la compra (calculado automáticamente) |
-| `estado` | VARCHAR(30) | Estado de la compra (pendiente, recibida, cancelada) |
-| `recibida` | BOOLEAN | Indica si la mercancía fue recibida físicamente |
-| `aplicada` | BOOLEAN | Indica si fue aplicada al inventario |
-| `fecha_recepcion` | TIMESTAMP | Fecha de recepción física (opcional) |
-| `created_at` | TIMESTAMP | Fecha de registro |
-| `updated_at` | TIMESTAMP | Última modificación |
-
-### **compra_producto**
-| Campo | Tipo | Descripción |
-|---|---|---|
-| `id_compra_producto` | SERIAL (PK) | Identificador único del detalle |
-| `id_compra` | INTEGER (FK) | Compra → `compra(id_compra)` |
-| `id_producto` | INTEGER (FK) | Producto → `productos(id_producto)` |
-| `cantidad` | INTEGER | Cantidad comprada (> 0) |
-| `precio_unitario` | NUMERIC(12,2) | Precio de compra unitario (≥ 0) |
-| `subtotal` | NUMERIC(14,2) | Cantidad × Precio unitario (calculado automáticamente) |
-| `created_at` | TIMESTAMP | Fecha de registro |
-| `updated_at` | TIMESTAMP | Última modificación |
+### Arquitectos de Software
+- Diseño de sistemas empresariales
+- Patrones de modelado de datos
+- Casos de uso de sistemas transaccionales
 
 ---
 
-## Organización por Módulos
+## 📂 Estructura de la Documentación
 
-### **Módulo de Ventas**
+### `modelo_entidad_relacion.md`
+**Documentación técnica completa del modelo de datos**
+
+Este documento contiene:
+
+#### 1. **Visión General**
+- Introducción al sistema y sus capacidades
+- Características principales del modelo
+- Alcance y objetivos del diseño
+
+#### 2. **Entidades Principales** (16 tablas)
+Descripción detallada de cada tabla del sistema:
+- Estructura de campos
+- Restricciones (PK, FK, NOT NULL, UNIQUE, CHECK)
+- Relaciones con otras entidades
+- Índices recomendados por tabla
+
+Incluye entidades para:
+- Gestión de personas (clientes, empleados, proveedores)
+- Operaciones de venta y facturación
+- Operaciones de compra
+- Control de inventario y stock
+- Catálogo de productos
+- Administración de sucursales
+
+#### 3. **Organización por Módulos**
+Flujos de proceso detallados para:
+- **Módulo de Compra**: Desde registro hasta recepción de mercancía
+- **Módulo de Inventario**: Entradas, salidas, transferencias y alertas
+- **Módulo de Venta**: Validación, registro y facturación
+
+#### 4. **Relaciones Entre Entidades**
+Explicación exhaustiva de:
+- Relaciones de herencia (especialización)
+- Relaciones por módulo funcional
+- Diagramas de dependencias
+- Cardinalidades y restricciones
+
+#### 5. **Restricciones de Integridad**
+- Reglas de negocio implementadas a nivel de BD
+- Políticas de eliminación (CASCADE, RESTRICT)
+- Validaciones de consistencia
+
+#### 6. **Índices Recomendados**
+- Justificación de cada índice propuesto
+- Impacto en performance
+- Campos estratégicos para optimización
+
+#### 7. **Notas de Implementación**
+- Consideraciones sobre transacciones
+- Uso de triggers
+- Recomendaciones de seguridad
+
+#### 8. **Consideraciones de Diseño**
+Análisis de:
+- Escalabilidad del modelo
+- Flexibilidad para extensiones
+- Integridad de datos
+- Optimización de performance
+
+---
+
+## 🔍 Conceptos Clave del Modelo
+
+### Diseño Multi-Tienda
+El sistema permite operar múltiples sucursales con inventario independiente pero centralizado en una sola base de datos.
+
+### Trazabilidad Completa
+Cada operación queda registrada con timestamps automáticos (`created_at`, `updated_at`) permitiendo auditorías completas.
+
+### Integridad Referencial Estricta
+El modelo implementa restricciones CASCADE y RESTRICT estratégicamente para mantener la consistencia de datos.
+
+### Normalización Optimizada
+Diseño en 3FN (Tercera Forma Normal) con desnormalización controlada donde el rendimiento lo requiere.
+
+### Gestión de Estados
+Las compras manejan estados (PENDIENTE, RECIBIDA, CANCELADA) permitiendo workflows controlados.
+
+---
+
+## 🗺️ Diagrama de Alto Nivel
+
 ```
-Venta (cabecera)
-├── Detalles_Venta (líneas de productos)
-└── Facturacion (documentos fiscales)
+┌─────────────────────────────────────────────────┐
+│                    PERSONA                      │
+│         (Entidad central del sistema)           │
+└─────────────────────────────────────────────────┘
+                      │
+        ┌─────────────┼─────────────┐
+        ▼             ▼             ▼
+    CLIENTE       EMPLEADO      PROVEEDOR
+        │             │             │
+        │             │             │
+        ▼             ▼             ▼
+      VENTA ──────> COMPRA ───> INVENTARIO
+        │             │             │
+        ▼             │             ▼
+    FACTURA          │          STOCK
+        │             │             │
+        └─────────────┴─────────────┘
+                      │
+                      ▼
+                  PRODUCTO
+                      │
+                      ▼
+                  CATEGORIA
 ```
 
-**Características:**
-- Cabecera con totales calculados automáticamente
-- Líneas de detalle con subtotales por producto
-- Vinculación opcional a cliente y empleado
-- Facturación posterior a la venta
+---
 
-### **Módulo de Compras**
+## 💡 Casos de Uso Cubiertos
+
+El modelo soporta los siguientes procesos de negocio:
+
+✅ Registro y gestión de clientes, empleados y proveedores  
+✅ Creación de órdenes de compra con seguimiento de estados  
+✅ Recepción de mercancía y actualización automática de inventario  
+✅ Registro de ventas con validación de stock disponible  
+✅ Emisión de facturas vinculadas a ventas  
+✅ Control de inventario por sucursal  
+✅ Transferencias de productos entre sucursales  
+✅ Consultas de disponibilidad de productos  
+✅ Historial completo de transacciones  
+✅ Asignación de puestos a empleados con historial laboral  
+
+---
+
+## 🛠️ Tecnologías y Herramientas
+
+Este modelo de datos está diseñado para ser implementado en:
+- MySQL / MariaDB
+- PostgreSQL
+- SQL Server
+- Oracle Database
+
+El diseño utiliza estándares SQL y puede ser adaptado a diferentes motores de base de datos con ajustes mínimos.
+
+---
+
+## 📚 Cómo Usar Esta Documentación
+
+### Para Implementar el Sistema
+1. Lee la **Visión General** para entender el alcance
+2. Revisa las **Entidades Principales** para conocer la estructura
+3. Estudia la **Organización por Módulos** para entender los flujos
+4. Implementa las tablas siguiendo las especificaciones
+5. Aplica los **Índices Recomendados** para optimizar
+
+### Para Estudiar Diseño de BD
+1. Analiza las **Relaciones Entre Entidades** para ver patrones
+2. Estudia las **Restricciones de Integridad** y su justificación
+3. Revisa las **Consideraciones de Diseño** para entender decisiones
+4. Compara con tus propios diseños
+
+### Para Adaptar a Tu Proyecto
+1. Identifica los módulos que necesitas
+2. Adapta las entidades a tu contexto de negocio
+3. Modifica restricciones según tus reglas
+4. Extiende con nuevas tablas si es necesario
+
+---
+
+## 📋 Contenido de los Archivos
+
 ```
-Compra (orden de compra)
-├── CompraProducto (líneas de productos)
-└── Inventario (aplicación automática)
+/
+├── README.md                           # Este archivo
+├── modelo_entidad_relacion.md          # Documentación técnica completa
+└── diagrama_er.png                     # Diagrama entidad-relación (si existe)
 ```
 
-**Características:**
-- Gestión de órdenes a proveedores
-- Control de recepción física
-- Aplicación automática al inventario al confirmar recepción
-- Estados: pendiente, recibida, aplicada
+---
 
-### **Módulo de Inventario**
-```
-Inventario (stock por tienda-producto)
-├── Entrada: CompraProducto (al recibir)
-└── Salida: Detalles_Venta (al vender)
-```
+## 🚀 Comenzar
 
-**Características:**
-- Clave compuesta (tienda + producto)
-- Cantidad actualizada automáticamente
-- Timestamp de última modificación
+Para explorar el modelo completo, dirígete a la **[Documentación Técnica](modelo_entidad_relacion.md)** donde encontrarás:
+- Especificaciones detalladas de cada tabla
+- Diagramas de flujo de procesos
+- Ejemplos de relaciones
+- Guías de implementación
 
 ---
 
-## Relaciones Entre Entidades
+## 📝 Notas Importantes
 
-### Relaciones Uno-a-Muchos (1:N)
-
-| Entidad Padre | Entidad Hija | Descripción |
-|---|---|---|
-| `Tiendas` | `Empleados` | Una tienda tiene múltiples empleados |
-| `Tiendas` | `Inventario` | Una tienda maneja inventario de múltiples productos |
-| `Tiendas` | `Venta` | Una tienda procesa múltiples ventas |
-| `Tiendas` | `Compra` | Una tienda recibe múltiples compras |
-| `Puesto_Empleados` | `Empleados` | Un puesto puede ser ocupado por múltiples empleados |
-| `Categoria_Productos` | `Productos` | Una categoría agrupa múltiples productos |
-| `Proveedores` | `Productos` | Un proveedor suministra múltiples productos |
-| `Proveedores` | `Compra` | Un proveedor realiza múltiples ventas a la empresa |
-| `Clientes` | `Venta` | Un cliente puede realizar múltiples compras |
-| `Empleados` | `Venta` | Un empleado procesa múltiples ventas |
-| `Productos` | `Detalles_Venta` | Un producto aparece en múltiples líneas de venta |
-| `Productos` | `CompraProducto` | Un producto puede comprarse múltiples veces |
-| `Venta` | `Detalles_Venta` | Una venta contiene múltiples líneas |
-| `Venta` | `Facturacion` | Una venta puede generar múltiples facturas |
-| `Compra` | `CompraProducto` | Una compra incluye múltiples productos |
-
-### Relaciones Muchos-a-Muchos (M:N)
-
-| Entidad A | Entidad B | Tabla Intermedia | Descripción |
-|---|---|---|---|
-| `Tiendas` | `Productos` | `Inventario` | Cada tienda maneja stock de múltiples productos |
+- Este es un **modelo lógico**, no incluye scripts SQL de implementación
+- Las restricciones y tipos de datos son referencias, adapta según tu motor de BD
+- Los flujos de procesos son sugerencias, modifícalos según tus necesidades
+- El modelo está diseñado para ser **extensible** y **escalable**
 
 ---
 
-## Claves y Restricciones
-
-### Claves Primarias
-
-| Tabla | Tipo de Clave | Campos |
-|---|---|---|
-| `tiendas` | Simple | `id_tienda` (SERIAL) |
-| `puesto_empleados` | Simple | `id_puesto` (SERIAL) |
-| `empleados` | Simple | `id_empleado` (SERIAL) |
-| `proveedores` | Simple | `id_proveedor` (SERIAL) |
-| `categoria_productos` | Simple | `id_categoria` (SERIAL) |
-| `productos` | Simple | `id_producto` (SERIAL) |
-| `clientes` | Simple | `id_cliente` (SERIAL) |
-| `venta` | Simple | `id_venta` (SERIAL) |
-| `detalles_venta` | Simple | `id_detalle_venta` (SERIAL) |
-| `facturacion` | Simple | `id_factura` (SERIAL) |
-| `compra` | Simple | `id_compra` (SERIAL) |
-| `compra_producto` | Simple | `id_compra_producto` (SERIAL) |
-| `inventario` | **Compuesta** | `(id_tienda, id_producto)` |
-
-### Restricciones de Unicidad
-
-| Tabla | Campo | Descripción |
-|---|---|---|
-| `productos` | `sku` | Código único de producto |
-| `clientes` | `rfc` | RFC único cuando no es NULL |
-
-### Restricciones de Integridad
-
-| Tabla | Campo | Restricción |
-|---|---|---|
-| `detalles_venta` | `cantidad` | CHECK (cantidad > 0) |
-| `detalles_venta` | `precio_unitario` | CHECK (precio_unitario >= 0) |
-| `compra_producto` | `cantidad` | CHECK (cantidad > 0) |
-| `compra_producto` | `precio_unitario` | CHECK (precio_unitario >= 0) |
-
----
-
-## Integridad Referencial
-
-### Políticas de Eliminación
-
-| Relación | Política | Justificación |
-|---|---|---|
-| `tiendas` → `empleados` | SET NULL | Empleado puede existir sin tienda asignada |
-| `puesto_empleados` → `empleados` | SET NULL | Empleado puede existir sin puesto definido |
-| `categoria_productos` → `productos` | SET NULL | Producto puede existir sin categoría |
-| `proveedores` → `productos` | SET NULL | Producto puede existir sin proveedor definido |
-| `venta` → `detalles_venta` | CASCADE | Sin venta no pueden existir detalles |
-| `venta` → `facturacion` | CASCADE | Sin venta no puede existir factura |
-| `compra` → `compra_producto` | CASCADE | Sin compra no pueden existir líneas |
-| `productos` → `detalles_venta` | RESTRICT | No eliminar producto si tiene ventas |
-| `productos` → `compra_producto` | RESTRICT | No eliminar producto si tiene compras |
-
----
-
-## Consideraciones de Diseño
-
-### Escalabilidad
-- **Particionamiento**: La tabla `inventario` con clave compuesta permite distribución eficiente
-- **Índices**: Claves foráneas indexadas automáticamente para consultas rápidas
-- **Normalización**: Eliminación de redundancia manteniendo performance
-
-### Flexibilidad
-- **Campos opcionales**: Muchas relaciones permiten NULL para adaptabilidad
-- **Extensibilidad**: Estructura preparada para nuevos módulos (devoluciones, promociones, etc.)
-- **Multi-ubicación**: Diseño nativo para operaciones en múltiples tiendas
-
-### Integridad de Datos
-- **Totales calculados**: Subtotales y totales mantienen consistencia automática
-- **Estados controlados**: Flujos de compra con estados bien definidos
-- **Trazabilidad**: Timestamps automáticos en todas las tablas
-
-### Performance
-- **Claves surrogate**: IDs seriales para joins eficientes
-- **Desnormalización controlada**: Totales precalculados para consultas frecuentes
-- **Índices estratégicos**: Optimización para consultas comunes por fecha, cliente, producto
-
----
-
-## Diagramas de Apoyo
-
-Para visualizar este modelo:
-1. **Diagrama ER completo**: `diagrams/modelo_logico.puml` (PlantUML)
-2. **Documentación detallada**: `docs/tablas_modelo_logico.md`
-
----
-
-**Nota**: Este documento se enfoca en la estructura lógica del modelo. Para detalles de implementación como triggers, funciones y procedimientos, consulte la documentación técnica complementaria.
+**Documentación**: v2.0  
+**Última actualización**: Diciembre 2025
