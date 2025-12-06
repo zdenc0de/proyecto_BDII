@@ -1,7 +1,5 @@
 # Proyecto Final — Bases de Datos II
 
-![Sistema de Análisis de Ventas](https://github.com/user-attachments/assets/1207e249-903d-4e4d-8581-bf1b2b45937d)
-
 **Profesor:** Pablo Salas Castillo • **Grupo:** CO02
 
 Sistema integral de gestión y análisis de ventas con arquitectura OLTP/OLAP, desarrollado con React, Node.js y PostgreSQL. Implementa operaciones ABCCR, análisis multidimensional con ROLLUP/CUBE/RANK/DENSE_RANK, y generación de documentos XML.
