@@ -676,3 +676,40 @@ Para optimizar el rendimiento del sistema, se recomienda crear índices en los s
 1. **Transacciones**: Las operaciones de VENTA y COMPRA deben ejecutarse dentro de transacciones para garantizar consistencia
 2. **Triggers**: Considerar triggers para actualizar automáticamente STOCK en operaciones de venta
 3. **Auditoría**: Los campos `created_at` y `updated_at` permiten auditoría de cambios
+
+---
+
+## Consideraciones de Diseño
+
+### Escalabilidad
+- **Particionamiento**: La tabla `inventario` con clave compuesta permite distribución eficiente
+- **Índices**: Claves foráneas indexadas automáticamente para consultas rápidas
+- **Normalización**: Eliminación de redundancia manteniendo performance
+
+### Flexibilidad
+- **Campos opcionales**: Muchas relaciones permiten NULL para adaptabilidad
+- **Extensibilidad**: Estructura preparada para nuevos módulos (devoluciones, promociones, etc.)
+- **Multi-ubicación**: Diseño nativo para operaciones en múltiples tiendas
+
+### Integridad de Datos
+- **Totales calculados**: Subtotales y totales mantienen consistencia automática
+- **Estados controlados**: Flujos de compra con estados bien definidos
+- **Trazabilidad**: Timestamps automáticos en todas las tablas
+
+### Performance
+- **Claves surrogate**: IDs seriales para joins eficientes
+- **Desnormalización controlada**: Totales precalculados para consultas frecuentes
+- **Índices estratégicos**: Optimización para consultas comunes por fecha, cliente, producto
+
+---
+
+## Diagramas de Apoyo
+
+Para visualizar este modelo:
+1. **Diagrama ER completo**: `diagrams/modelo_logico.puml` (PlantUML)
+2. **Documentación detallada**: `docs/tablas_modelo_logico.md`
+3. **Script DDL**: `sql/modelo_logico.sql`
+
+---
+
+**Nota**: Este documento se enfoca en la estructura lógica del modelo. Para detalles de implementación como triggers, funciones y procedimientos, consulte la documentación técnica complementaria.
